@@ -1,66 +1,120 @@
 <template>
-  <div>
-    <h3>Crear Estudiante</h3>
+  <div class="form-container">
+    <h3>📝 Registrar Nuevo Estudiante</h3>
+    
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input type="text" v-model="estudiante.nombre" placeholder="Ej: Dylan" />
+    </div>
 
-    <input type="text" v-model="nombre" placeholder="Nombre" />
-    <input type="text" v-model="apellido" placeholder="Apellido" />
-    <input type="date" v-model="fechaNacimiento" placeholder="Fecha de Nacimiento" />
-    <input type="text" v-model="genero" placeholder="Género" />
-    <input type="text" v-model="provincia" placeholder="Provincia" />
+    <div class="form-group">
+      <label>Apellido:</label>
+      <input type="text" v-model="estudiante.apellido" placeholder="Ej: Lema" />
+    </div>
 
-    <button @click="guardar">Crear</button>
+    <div class="form-group">
+      <label>Fecha de Nacimiento:</label>
+      <input type="text" v-model="estudiante.fechaNacimiento" />
+    </div>
 
-    <p v-if="mensaje">{{ mensaje }}</p>
+    <div class="form-group">
+      <label>Género:</label>
+      <select v-model="estudiante.genero">
+        <option value="">Seleccione...</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Provincia:</label>
+      <input type="text" v-model="estudiante.provincia" placeholder="Ej: Pichincha" />
+    </div>
+
+    <button class="btn-guardar" @click="guardar">💾 Guardar Estudiante</button>
+
+    <p v-if="mensaje" :class="{'success': exito, 'error': !exito}">
+      {{ mensaje }}
+    </p>
   </div>
 </template>
 
 <script>
-import { guardarFacade } from '../clients/matriculaClient.js'
-export default{
-    data() {
-        return {
-            nombre: '',
-            apellido: '',
-            fechaNacimiento: '',
-            genero: '',
-            provincia: '',
-            mensaje: '' // para mostrar éxito o error
-        }
-    },
+import { guardarFacade } from '@/clients/MatriculaClient.js'
 
-    methods: {
-  async guardar() {
-    // Creamos el objeto a enviar
-    const body = {
-      nombre: this.nombre,
-      apellido: this.apellido,
-      fechaNacimiento: this.fechaNacimiento,
-      genero: this.genero,
-      provincia: this.provincia
+export default {
+  data() {
+    return {
+      estudiante: {
+        nombre: '',
+        apellido: '',
+        fechaNacimiento: '', 
+        provincia: '',
+        genero: ''
+      },
+      mensaje: '',
+      exito: false
     }
+  },
+  methods: {
+    async guardar() {
+      try {
+        const body = {
+          ...this.estudiante,
+          fechaNacimiento: this.estudiante.fechaNacimiento + "T00:00:00" 
+        }
 
-    try {
-      const resp = await guardarFacade(body)
-      console.log("Estudiante creado:", resp)
-      this.mensaje = `Estudiante ${resp.nombre} ${resp.apellido} creado correctamente!`
-
-      // Limpiar inputs
-      this.nombre = ''
-      this.apellido = ''
-      this.fechaNacimiento = ''
-      this.genero = ''
-      this.provincia = ''
-
-    } catch (error) {
-      console.error("Error al crear estudiante:", error)
-      this.mensaje = "Error al crear estudiante. Ver consola."
+        const resp = await guardarFacade(body)
+        this.exito = true
+        this.mensaje = `Estudiante ${resp.nombre} creado con ID: ${resp.id}`
+        this.limpiarFormulario()
+      } catch (error) {
+        this.exito = false
+        this.mensaje = "Error al conectar con el servidor"
+      }
+    },
+    limpiarFormulario() {
+      this.estudiante = { nombre: '', apellido: '', fechaNacimiento: '', genero: '', provincia: '' }
     }
   }
 }
-
-
-}
-
-
-
 </script>
+
+<style scoped>
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+input, select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.btn-guardar {
+  width: 100%;
+  padding: 10px;
+  background-color: #42b983;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.success { color: green; margin-top: 10px; }
+.error { color: red; margin-top: 10px; }
+</style>

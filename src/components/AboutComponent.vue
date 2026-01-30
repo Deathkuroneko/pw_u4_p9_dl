@@ -1,106 +1,68 @@
 <template>
-    <button @click="consultar">consultar</button>
-    <table>
-        <ul>
-            <li v-for="(est, index) in estudiante" :key="index">
-                {{ est.nombre }} {{ est.apellido }}
-            </li>
-        </ul>
-    </table>
+    <div class="list-container">
+        <button class="btn-primary" @click="consultar">
+        🔄 Cargar Lista de Estudiantes
+        </button>
 
-    <button @click="guardar">crear</button>
-    <button @click="actualizar">actualizar</button>
-    <button @click="actualizacionParcial">actualizar parcial</button>
-    <button @click="eliminar">eliminar</button>
+        <div class="table-wrapper" v-if="estudiante.length > 0">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Completo</th>
+                <th>F. Nacimiento</th>
+                <th>Género</th>
+                <th>Provincia</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="est in estudiante" :key="est.id">
+                <td><strong>{{ est.id }}</strong></td>
+                <td>{{ est.nombre }} {{ est.apellido }}</td>
+                <td>{{ est.FechaNacimiento }}</td>
+                <td>{{ est.genero }}</td>
+                <td>{{ est.provincia }}</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+
+        <p v-else class="empty-msg">
+        No hay estudiantes cargados
+        </p>
+    </div>
 </template>
 
 <script>
-import {
-    actualizacionParcialFacade,
-    consultarFacade,
-    actualizarFacade,
-    guardarFacade,
-    eliminarFacade,
-    consultarPorIdFacade
-} from '../clients/matriculaClient.js'
+import { consultarFacade } from '@/clients/MatriculaClient.js';
 
 export default {
 
-    data(){
-        return{
-            nombre: '',
-            apellido: '',
-            estudiante: []
-        }
+    data() {
+        return {
+        estudiante: []
+        };
     },
 
-    methods:{
-        async consultar(){
-            const resp= await consultarFacade();
-                
-                console.log("Respuesta final");
-                console.log(resp);
-                console.log(resp.nombre, resp.apellido);
-                this.estudiante = resp;
+    methods: {
+        async consultar() {
+        try {
+            this.estudiante = await consultarFacade();
+            console.log(this.estudiante);
+        } catch (error) {
+            console.error('Error al cargar estudiantes:', error);
+        }
         },
-
-        async actualizar(){
-            const resp= await actualizarFacade();
-                
-                console.log("Respuesta final");
-                console.log(resp);
-                console.log(resp.nombre, resp.apellido);
-                this.nombre = resp.nombre;
-                this.apellido = resp.apellido;
-        },
-
-        async consultarPorId(){
-            const resp= await consultarPorIdFacade();
-                
-                console.log("Respuesta final");
-                console.log(resp);
-                console.log(resp.nombre, resp.apellido);
-                this.nombre = resp.nombre;
-                this.apellido = resp.apellido;
-        },
-
-        async guardar(){
-            const resp= await guardarFacade();
-                
-                console.log("Respuesta final");
-                console.log(resp);
-                console.log(resp.nombre, resp.apellido);
-                this.nombre = resp.nombre;
-                this.apellido = resp.apellido;
-        },
-
-        async eliminar(){
-            const resp= await eliminarFacade();
-                
-                console.log("Respuesta final");
-                console.log(resp);
-                console.log(resp.nombre, resp.apellido);
-                this.nombre = resp.nombre;
-                this.apellido = resp.apellido;
-        },
-
-        async actualizacionParcial(){
-            const resp= await actualizacionParcialFacade();
-                
-                console.log("Respuesta final");
-                console.log(resp);
-                console.log(resp.nombre, resp.apellido);
-                this.nombre = resp.nombre;
-                this.apellido = resp.apellido;
-        },
-        
     }
-
-
-
-}
+};
 </script>
 
-<style>
-
+<style scoped>
+.btn-primary { background-color: #42b983; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
+th { background-color: #2c3e50; color: white; padding: 12px; text-align: left; }
+td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+tr:nth-child(even) { background-color: #f8f9fa; }
+tr:hover { background-color: #f1f1f1; }
 </style>
