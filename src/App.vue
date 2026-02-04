@@ -1,17 +1,31 @@
 <template>
-  <nav>
-    <router-link to="/about">Inicio / Todos</router-link> |
-    <router-link to="/consultarId">Buscar por ID</router-link> |
-    <router-link to="/crear">Nuevo Estudiante</router-link> |
-    <router-link to="/actualizar">Actualizar Todo</router-link> |
-    <router-link to="/actualizarParcial">Edición Parcial</router-link> |
-    <router-link to="/eliminar">Borrar</router-link>
-  </nav>
+  <div id="app">
+    <nav v-if="$route.path !== '/login'">
+      <router-link to="/about">Inicio / Todos</router-link> |
+      <router-link to="/consultarId">Buscar por ID</router-link> |
+      <router-link to="/crear">Nuevo Estudiante</router-link> |
+      <router-link to="/actualizar">Actualizar Todo</router-link> |
+      <router-link to="/actualizarParcial">Edición Parcial</router-link> |
+      <router-link to="/eliminar">Borrar</router-link> |
+      <a href="#" @click="logout">Salir</a>
+    </nav>
 
-  <div class="container">
-    <router-view/>
+    <div class="container">
+      <router-view/>
+    </div>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    logout() {
+      localStorage.removeItem('token'); // Borramos el token
+      this.$router.push('/login');      // Volvemos al login
+    }
+  }
+};
+</script>
 
 <style>
 #app {

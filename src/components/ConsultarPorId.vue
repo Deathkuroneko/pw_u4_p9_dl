@@ -13,7 +13,7 @@
         <div class="profile-body">
             <p><strong>📍 Provincia:</strong> {{ estudiante.provincia }}</p>
             <p><strong>🚻 Género:</strong> {{ estudiante.genero }}</p>
-            <p><strong>📅 Nacimiento:</strong> {{ estudiante.FechaNacimiento }}</p>
+            <p><strong>📅 Nacimiento:</strong> {{ estudiante.fechaNacimiento }}</p>
         </div>
         </div>
     </div>
@@ -22,7 +22,12 @@
 <script>
 import { consultaPorIdFacade } from '@/clients/MatriculaClient.js'
 export default {
-    data() { return { id: null, estudiante: null } },
+    data() { 
+        return { 
+            id: null, 
+            estudiante: null 
+        } 
+    },
     methods: {
         async consultarPorId() {
             try {

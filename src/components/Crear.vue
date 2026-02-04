@@ -14,7 +14,7 @@
 
     <div class="form-group">
       <label>Fecha de Nacimiento:</label>
-      <input type="text" v-model="estudiante.fechaNacimiento" />
+      <input type="date" v-model="estudiante.fechaNacimiento" />
     </div>
 
     <div class="form-group">
@@ -62,7 +62,6 @@ export default {
       try {
         const body = {
           ...this.estudiante,
-          fechaNacimiento: this.estudiante.fechaNacimiento + "T00:00:00" 
         }
 
         const resp = await guardarFacade(body)

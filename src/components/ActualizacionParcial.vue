@@ -9,17 +9,17 @@
 
         <div class="patch-row">
         <input type="checkbox" v-model="activar.nombre" />
-        <input type="text" v-model="form.nombre" :disabled="!activar.nombre" placeholder="Cambiar Nombre" />
+        <input type="text" v-model="estudiante.nombre" :disabled="!activar.nombre" placeholder="Cambiar Nombre" />
         </div>
 
         <div class="patch-row">
         <input type="checkbox" v-model="activar.apellido" />
-        <input type="text" v-model="form.apellido" :disabled="!activar.apellido" placeholder="Cambiar Apellido" />
+        <input type="text" v-model="estudiante.apellido" :disabled="!activar.apellido" placeholder="Cambiar Apellido" />
         </div>
 
         <div class="patch-row">
         <input type="checkbox" v-model="activar.genero" />
-        <select v-model="form.genero" :disabled="!activar.genero">
+        <select v-model="estudiante.genero" :disabled="!activar.genero">
             <option value="Masculino">Masculino</option>
             <option value="Femenino">Femenino</option>
         </select>
@@ -41,7 +41,7 @@ export default {
             apellido: false,
             genero: false
         },
-        form: {
+        estudiante: {
             nombre: '',
             apellido: '',
             genero: ''
@@ -50,36 +50,37 @@ export default {
     },
     methods: {
         async procesarPatch() {
-        if (!this.id) return alert("ID requerido");
+    if (!this.id) return alert("ID requerido");
 
-        const body = {};
+    const body = {};
 
-        if (this.activar.nombre && this.form.nombre.trim())
-            body.nombre = this.form.nombre;
+    if (this.activar.nombre && this.estudiante.nombre.trim())
+        body.nombre = this.estudiante.nombre;
 
-        if (this.activar.apellido && this.form.apellido.trim())
-            body.apellido = this.form.apellido;
+    if (this.activar.apellido && this.estudiante.apellido.trim())
+        body.apellido = this.estudiante.apellido;
 
-        if (this.activar.genero && this.form.genero)
-            body.genero = this.form.genero;
+    if (this.activar.genero && this.estudiante.genero)
+        body.genero = this.estudiante.genero;
 
-        if (Object.keys(body).length === 0)
-            return alert("Marca al menos un campo válido para cambiar");
+    if (Object.keys(body).length === 0)
+        return alert("Marca al menos un campo válido para cambiar");
 
-        try {
-            await actualizacionParcialFacade(this.id, body);
-            alert("Campos actualizados correctamente");
+    try {
+        await actualizacionParcialFacade(this.id, body);
+        alert("Campos actualizados correctamente");
 
-            // limpiar
-            this.form = { nombre: '', apellido: '', genero: '' };
-            this.activar = { nombre: false, apellido: false, genero: false };
-            this.id = null;
+        // limpiar
+        this.estudiante = { nombre: '', apellido: '', genero: '' };
+        this.activar = { nombre: false, apellido: false, genero: false };
+        this.id = null;
 
-        } catch (error) {
-            alert("Error en la actualización parcial");
-            console.error(error);
-        }
-        }
+    } catch (error) {
+        alert("Error en la actualización parcial");
+        console.error(error);
+    }
+}
+
     }
 }
 </script>

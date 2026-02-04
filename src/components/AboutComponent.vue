@@ -7,24 +7,50 @@
         <div class="table-wrapper" v-if="estudiante.length > 0">
         <table>
             <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre Completo</th>
-                <th>F. Nacimiento</th>
-                <th>Género</th>
-                <th>Provincia</th>
-            </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre Completo</th>
+                    <th>F. Nacimiento</th>
+                    <th>Género</th>
+                    <th>Provincia</th>
+                    <th>hijos</th>
+                </tr>
             </thead>
             <tbody>
-            <tr v-for="est in estudiante" :key="est.id">
+            <template v-for="est in estudiante" :key="est.id">
+
+                <!-- fila estudiante -->
+                <tr>
                 <td><strong>{{ est.id }}</strong></td>
                 <td>{{ est.nombre }} {{ est.apellido }}</td>
-                <td>{{ est.FechaNacimiento }}</td>
+                <td>{{ est.fechaNacimiento }}</td>
                 <td>{{ est.genero }}</td>
                 <td>{{ est.provincia }}</td>
-            </tr>
+                <td>
+                    <button @click="verHijos(est)" class="btn-hijos">
+                    Ver hijos
+                    </button>
+                </td>
+                </tr>
+
+                <!-- filas hijos -->
+                <template v-if="est.hijos">
+                    <tr v-for="h in est.hijos" :key="h.id">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td> {{ h.nombre }} {{ h.apellido }}</td>
+                    </tr>
+                </template>
+
+            </template>
             </tbody>
+
+            
         </table>
+        
         </div>
 
         <p v-else class="empty-msg">
@@ -34,28 +60,34 @@
 </template>
 
 <script>
-import { consultarFacade } from '@/clients/MatriculaClient.js';
+import { consultarFacade, consultarPorLink, login } from '@/clients/MatriculaClient.js';
 
 export default {
+  data() {
+    return {
+      estudiante: []
+    };
+  },
 
-    data() {
-        return {
-        estudiante: []
-        };
+  methods: {
+    async consultar() {
+      this.estudiante = await consultarFacade();
     },
 
-    methods: {
-        async consultar() {
-        try {
-            this.estudiante = await consultarFacade();
-            console.log(this.estudiante);
-        } catch (error) {
-            console.error('Error al cargar estudiantes:', error);
-        }
-        },
+    async verHijos(est) {
+      const linkHijos = est.links.find(l => l.rel === 'hijosSelf');
+
+      try {
+        const data = await consultarPorLink(linkHijos.href);
+        est.hijos = data;
+      } catch (error) {
+        console.error("ERROR AL CARGAR HIJOS:", error);
+      }
     }
+  }
 };
 </script>
+
 
 <style scoped>
 .btn-primary { background-color: #42b983; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
