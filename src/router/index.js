@@ -7,23 +7,28 @@ import EliminarView from '@/views/EliminarView.vue';
 import consultaPorIdView from '@/views/ConsultaPorIdView.vue';
 import LoginView from '@/views/LoginView.vue';
 
-// ... tus imports se mantienen igual ...
-
 const routes = [
   { path: '/', redirect: '/login' }, // Si entran a la raíz, mándalos al login
   { path: '/login', name: 'login', component: LoginView },
-  { path: '/about', name: 'about', component: AboutView },
-  { path: '/crear', component: CrearView },
-  { path: '/actualizar', component: ActualizarView },
-  { path: '/actualizarParcial', component: ActualizarParcialView },
-  { path: '/eliminar', component: EliminarView },
-  { path: '/consultarId', component: consultaPorIdView },
+  { path: '/about', name: 'about', component: AboutView, meta:{ requiereAutorizacion: true, esPublica: false} },
+  { path: '/crear', component: CrearView, meta:{ requiereAutorizacion: true, esPublica: false} },
+  { path: '/actualizar', component: ActualizarView, meta:{ requiereAutorizacion: true, esPublica: false} },
+  { path: '/actualizarParcial', component: ActualizarParcialView, meta:{ requiereAutorizacion: false, esPublica: false} },
+  { path: '/eliminar', component: EliminarView, meta:{ requiereAutorizacion: true, esPublica: false} },
+  { path: '/consultarId', component: consultaPorIdView, meta:{ requiereAutorizacion: false, esPublica: false} },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+/*Configuracion del guardian */
+router.beforeEach((to, from, next) => {
+  
+})
+
+
 
 // GUARD DE SEGURIDAD: No deja entrar a nada si no hay token
 router.beforeEach((to, from, next) => {
