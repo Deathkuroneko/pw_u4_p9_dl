@@ -1,10 +1,11 @@
 import axios from "axios";
 
+//Base para todos los endpoints
 const http = axios.create({
     baseURL: 'http://localhost:7890/matricula/api/v1.0'
 });
 
-// Este interceptor funcionará para TODAS las peticiones que usen 'http'
+// Config para Authorization el token
 http.interceptors.request.use(
     config => {
         const token = localStorage.getItem('token');
