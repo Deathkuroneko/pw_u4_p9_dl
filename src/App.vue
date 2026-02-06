@@ -20,7 +20,8 @@
 export default {
   methods: {
     logout() {
-      localStorage.removeItem('token'); // Borramos el token
+      localStorage.removeItem('token');
+      localStorage.removeItem('estaAutenticado');
       this.$router.push('/login');      // Volvemos al login
     }
   }

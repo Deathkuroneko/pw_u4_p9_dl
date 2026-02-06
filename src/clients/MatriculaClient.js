@@ -9,6 +9,7 @@ export const login = async (usuario, contraseña) => {
         password: contraseña
     });
     localStorage.setItem('token', res.data.accessToken);
+    localStorage.setItem('estaAutenticado', 'true');
     return res.data;
 };
 
