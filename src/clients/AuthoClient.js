@@ -17,4 +17,4 @@ http.interceptors.request.use(
     error => Promise.reject(error)
 );
 
-export default http; // Exporta solo este
+export default http;
